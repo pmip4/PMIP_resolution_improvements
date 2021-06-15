@@ -15,17 +15,14 @@ Panel 1.
      comes from the CCSM4 T31 palaeoclimate resolution, which is very similar].
 
 Panel 2.
-   - The coolwarm diverging scheme should be used when both high and low values are interesting.
-     However, be careful using this scheme if the projection will be printed to black and white.
+   - PMIP2 is taken from CCSM
 
 Panel 3.
-  - This is an example of a less distinct contrasting color gradient. This choice in color scheme would
-    be a good choice for printing in black and white but may create some challenges for individuals who
-    experience blue-green colorblindness.
+  - Now we're onto CCSM4, and can easily download the files from the ESGF
+    Unfortunately, we also have to deal with rotated ocean grids, which opens a whole new stack of problems
 
 Panel 4.
- - This plot shows how drastically contrasting colors can be incredibly useful for plotting this type of data.
-   This color scheme will work well for color blind impacted individuals and is black and white print friendly.
+ - Finally we have CESM2 - the most up-to-date version of NCARs models.
 
 This script was originally based on the CB_Temperature.py script from GeogCAT_examples.
 
@@ -98,8 +95,6 @@ def Plot(topo, isOro, title, ax, inc_cbar):
 
 def Plot_rotated(topo, lat2d, lon2d, isOro, title, ax):
 
-    ax = plt.axes(projection=ccrs.PlateCarree())
-
     # Use the 'terrain' colormap. Add transparent to be used for NaN
     newcmp = plt.cm.get_cmap("terrain")
     newcmp.set_bad(color=(0.1, 0.2, 0.5, 0.0))
@@ -113,7 +108,7 @@ def Plot_rotated(topo, lat2d, lon2d, isOro, title, ax):
 
 
     # Contourf-plot data
-    tmp = plt.pcolormesh( lat2d, lon2d, topo,
+    tmp = plt.pcolormesh( lon2d, lat2d, topo,
                            #transform=projection,
                            vmin=-500,
                            vmax=2000,
@@ -147,7 +142,7 @@ gen_bath=gen_bath+100
 gen_orog_f = xr.open_dataset("data/GENESIS_TOPO.nc",decode_times=False)
 gen_orog=gen_orog_f.TOPO.where(gen_orog_f.TOPO > 0.001)
 Plot(gen_bath.isel(time=0), "False", "PMIP1", ax1, "False")
-Plot(gen_orog.isel(time=0), "True", "PMIP1", ax1, "False")
+#Plot(gen_orog.isel(time=0), "True", "PMIP1", ax1, "False")
 
 ###############################################################################
 # CCSM
@@ -158,7 +153,7 @@ ccsm_bath=ccsm_bath_f.zobt
 ccsm_orog_f = xr.open_dataset("data/orog_A1.PIcntrl.CCSM.atmm.nc",decode_times=False)
 ccsm_orog=ccsm_orog_f.orog.where(ccsm_orog_f.orog > 0.001)
 Plot(ccsm_bath, "False", "PMIP2", ax2, "False")
-Plot(ccsm_orog, "True", "PMIP2", ax2, "False")
+#Plot(ccsm_orog, "True", "PMIP2", ax2, "False")
 
 ###############################################################################
 # CCSM4
@@ -168,16 +163,16 @@ ccsm4_bath=ccsm4_bath_f.deptho
 ccsm4_orog_f = xr.open_dataset("data/orog_fx_CCSM4_piControl_r0i0p0.nc",decode_times=False)
 ccsm4_orog=ccsm4_orog_f.orog.where(ccsm4_orog_f.orog > 0.001)
 Plot_rotated(ccsm4_bath, ccsm4_bath_f.lat, ccsm4_bath_f.lon, "False", "PMIP3", ax3)
-Plot(ccsm4_orog, "True", "PMIP3", ax3, "False")
+#Plot(ccsm4_orog, "True", "PMIP3", ax3, "False")
 
 ###############################################################################
 # CESM2
 ax4 = fig.add_subplot(grid[0,3], projection=ccrs.PlateCarree())
 cesm2_bath_f = xr.open_dataset("data/deptho_Ofx_CESM2_piControl_r1i1p1f1_gn.nc",decode_times=False)
-cesm2_bath=cesm2_bath_f.deptho
+cesm2_bath=cesm2_bath_f.deptho.where(cesm2_bath_f.deptho > 0.5)
 cesm2_orog_f = xr.open_dataset("data/orog_fx_CESM2_piControl_r1i1p1f1_gn.nc",decode_times=False)
 cesm2_orog=cesm2_orog_f.orog.where(cesm2_orog_f.orog > 0.001)
 Plot_rotated(cesm2_bath, cesm2_bath_f.lat, cesm2_bath_f.lon, "False", "PMIP4", ax4)
-Plot(cesm2_orog, "True", "PMIP4", ax4, "True")
+#Plot(cesm2_orog, "True", "PMIP4", ax4, "True")
 
-fig.savefig('outplot.pdf')
+fig.savefig('outplot_sea.pdf')

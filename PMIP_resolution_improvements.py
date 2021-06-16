@@ -61,15 +61,15 @@ def Plot(topo, isOro, title, ax, inc_cbar):
     tmp = topo.plot.pcolormesh(ax=ax,
                            transform=projection,
                            levels=128,
-                           vmin=-500,
-                           vmax=2000,
+                           vmin=-200,
+                           vmax=800,
                            cmap=newcmp,
                            add_colorbar=False,
                            zorder=order)
 
     if inc_cbar == "True":
       # Add color bar
-      cbar_ticks = np.arange(-2000, 2000, 250)
+      cbar_ticks = np.arange(-2000, 2000, 200)
       cbar = plt.colorbar(tmp,
                         orientation='vertical',
                         shrink=0.8,
@@ -110,8 +110,8 @@ def Plot_rotated(topo, lat2d, lon2d, isOro, title, ax):
     # Contourf-plot data
     tmp = plt.pcolormesh( lon2d, lat2d, topo,
                            #transform=projection,
-                           vmin=-500,
-                           vmax=2000,
+                           vmin=-200,
+                           vmax=800,
                            cmap=newcmp,
                            zorder=order)
 
@@ -141,8 +141,8 @@ gen_bath=gen_bath_f.LANDFRAC.where(gen_bath_f.LANDFRAC < 0.5)
 gen_bath=gen_bath+100
 gen_orog_f = xr.open_dataset("data/GENESIS_TOPO.nc",decode_times=False)
 gen_orog=gen_orog_f.TOPO.where(gen_orog_f.TOPO > 0.001)
-Plot(gen_bath.isel(time=0), "False", "PMIP1", ax1, "False")
-#Plot(gen_orog.isel(time=0), "True", "PMIP1", ax1, "False")
+#Plot(gen_bath.isel(time=0), "False", "PMIP1", ax1, "False")
+Plot(gen_orog.isel(time=0), "True", "PMIP1", ax1, "False")
 
 ###############################################################################
 # CCSM
@@ -152,8 +152,8 @@ ccsm_bath_f = xr.open_dataset("data/zobt_O1.PIcntrl.CCSM.ocnm.nc",decode_times=F
 ccsm_bath=ccsm_bath_f.zobt
 ccsm_orog_f = xr.open_dataset("data/orog_A1.PIcntrl.CCSM.atmm.nc",decode_times=False)
 ccsm_orog=ccsm_orog_f.orog.where(ccsm_orog_f.orog > 0.001)
-Plot(ccsm_bath, "False", "PMIP2", ax2, "False")
-#Plot(ccsm_orog, "True", "PMIP2", ax2, "False")
+#Plot(ccsm_bath, "False", "PMIP2", ax2, "False")
+Plot(ccsm_orog, "True", "PMIP2", ax2, "False")
 
 ###############################################################################
 # CCSM4
@@ -162,8 +162,8 @@ ccsm4_bath_f = xr.open_dataset("data/deptho_fx_CCSM4_piControl_r0i0p0.nc",decode
 ccsm4_bath=ccsm4_bath_f.deptho
 ccsm4_orog_f = xr.open_dataset("data/orog_fx_CCSM4_piControl_r0i0p0.nc",decode_times=False)
 ccsm4_orog=ccsm4_orog_f.orog.where(ccsm4_orog_f.orog > 0.001)
-Plot_rotated(ccsm4_bath, ccsm4_bath_f.lat, ccsm4_bath_f.lon, "False", "PMIP3", ax3)
-#Plot(ccsm4_orog, "True", "PMIP3", ax3, "False")
+#Plot_rotated(ccsm4_bath, ccsm4_bath_f.lat, ccsm4_bath_f.lon, "False", "PMIP3", ax3)
+Plot(ccsm4_orog, "True", "PMIP3", ax3, "False")
 
 ###############################################################################
 # CESM2
@@ -172,7 +172,7 @@ cesm2_bath_f = xr.open_dataset("data/deptho_Ofx_CESM2_piControl_r1i1p1f1_gn.nc",
 cesm2_bath=cesm2_bath_f.deptho.where(cesm2_bath_f.deptho > 0.5)
 cesm2_orog_f = xr.open_dataset("data/orog_fx_CESM2_piControl_r1i1p1f1_gn.nc",decode_times=False)
 cesm2_orog=cesm2_orog_f.orog.where(cesm2_orog_f.orog > 0.001)
-Plot_rotated(cesm2_bath, cesm2_bath_f.lat, cesm2_bath_f.lon, "False", "PMIP4", ax4)
-#Plot(cesm2_orog, "True", "PMIP4", ax4, "True")
+#Plot_rotated(cesm2_bath, cesm2_bath_f.lat, cesm2_bath_f.lon, "False", "PMIP4", ax4)
+Plot(cesm2_orog, "True", "PMIP4", ax4, "True")
 
-fig.savefig('outplot_sea.pdf')
+fig.savefig('outplot_land.pdf')

@@ -41,47 +41,6 @@ import xesmf as xe
 from geocat.viz import util as gvutil
 
 ###############################################################################
-# Create a plotting script:
-
-def Plot(topo, title, ax, inc_cbar):
-
-    # Use the 'terrain' colormap. Add transparent to be used for NaN
-    newcmp = plt.cm.get_cmap("terrain")
-    #newcmp.set_bad(color=(0.1, 0.2, 0.5, 0.0))
-  
-    # Contourf-plot data
-    tmp = topo.plot.contourf(ax=ax,
-                           transform=projection,
-                           levels=128,
-                           vmin=-200,
-                           vmax=800,
-                           cmap=newcmp,
-                           add_colorbar=False)
-
-    if inc_cbar == "True":
-      # Add color bar
-      cbar_ticks = np.arange(-2000, 2000, 200)
-      cbar = plt.colorbar(tmp,
-                        orientation='vertical',
-                        shrink=0.8,
-                        pad=0.05,
-                        extendrect=True,
-                        ticks=cbar_ticks)
-      cbar.ax.tick_params(labelsize=10)
-
-    # Use geocat.viz.util convenience function to set axes parameters without calling several matplotlib functions
-    # ylim and xlim provide the (lat,lon) bounds respectively
-    # Setting these as different to the selected bounds will cause issues
-    gvutil.set_axes_limits_and_ticks(ax, xlim=(90, 140), ylim=(-20, 20))
-
-    # Use geocat.viz.util convenience function to set titles and labels without calling several matplotlib functions
-    gvutil.set_titles_and_labels(ax,
-                                 maintitle=title,
-                                 maintitlefontsize=14,
-                                 xlabel="",
-                                 ylabel="")
-
-###############################################################################
 # After xesmf documentation: https://xesmf.readthedocs.io/en/latest/notebooks/Compare_algorithms.html
 def regrid(ds_in, ds_out, dr_in):
     """Convenience function for one-time regridding"""
@@ -199,4 +158,4 @@ cbar.ax.tick_params(labelsize=8)
 
 #############################################################################
 # Output figure
-fig.savefig('Figure.pdf')
+fig.savefig('Figure.png')

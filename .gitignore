@@ -130,3 +130,6 @@ dmypy.json
 
 # Do not store any temporary images
 *.png
+
+# Ignore vscode debug stuff
+.vscode
